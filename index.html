@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>Flor & Lean — 10 años</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:      #080808;
+  --off-black:  #111111;
+  --white:      #f5f3ef;
+  --off-white:  #e8e5df;
+  --grey-dark:  #333;
+  --grey:       #777;
+  --grey-light: #bbb;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans:  'DM Sans', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; }
+
+::-webkit-scrollbar { width: 1px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--grey-dark); }
+
+/* ═══════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════ */
+.label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.serif-display {
+  font-family: var(--serif);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.serif-italic {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1),
+              transform 1s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.up    { transform: translateY(28px); }
+.reveal.left  { transform: translateX(-28px); }
+.reveal.right { transform: translateX(28px); }
+.reveal.scale { transform: scale(0.97); }
+
+.reveal.visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+.reveal.d1 { transition-delay: 0.1s; }
+.reveal.d2 { transition-delay: 0.2s; }
+.reveal.d3 { transition-delay: 0.3s; }
+.reveal.d4 { transition-delay: 0.4s; }
+.reveal.d5 { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+#hero {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#hero-bg {
+  position: absolute;
+  inset: -10%;
+  background: url('fotos/cartagena-noche.jpg') center 35% / cover no-repeat;
+  filter: grayscale(100%) brightness(0.18) contrast(1.1);
+  will-change: transform;
+  transition: transform 12s cubic-bezier(0.25,0.46,0.45,0.94);
+  transform: scale(1.08);
+}
+#hero-bg.kenburns { transform: scale(1.0) translateY(2%); }
+
+#hero-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(8,8,8,0.7) 100%),
+    linear-gradient(to bottom, rgba(8,8,8,0.3) 0%, transparent 40%, rgba(8,8,8,0.85) 80%, var(--black) 100%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 28px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: heroIn 2s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+}
+
+@keyframes heroIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+  letter-spacing: 0.5em;
+  font-size: 11px;
+  color: rgba(245,243,239,0.45);
+  margin-bottom: 32px;
+  font-family: var(--sans);
+  font-weight: 300;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(72px, 22vw, 160px);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--white);
+}
+
+.hero-title .italic-line {
+  font-style: italic;
+  display: block;
+}
+
+.hero-title .regular-line {
+  display: block;
+  color: rgba(245,243,239,0.55);
+}
+
+.hero-names {
+  margin-top: 28px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 4vw, 24px);
+  color: rgba(245,243,239,0.5);
+  letter-spacing: 0.08em;
+}
+
+.hero-btn {
+  display: inline-block;
+  margin-top: 56px;
+  padding: 15px 44px;
+  border: 1px solid rgba(245,243,239,0.2);
+  color: rgba(245,243,239,0.8);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  transition: border-color 0.4s, color 0.4s, letter-spacing 0.4s, background 0.4s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-btn:hover, .hero-btn:active {
+  border-color: rgba(245,243,239,0.5);
+  color: var(--white);
+  letter-spacing: 0.45em;
+  background: rgba(245,243,239,0.04);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: env(safe-area-inset-bottom, 28px);
+  bottom: max(28px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0;
+  animation: fadeIn 1s ease 2.5s forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.scroll-bar {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, transparent, rgba(245,243,239,0.4));
+  animation: scrollAnim 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollAnim {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+  50%       { opacity: 0.9; transform: scaleY(1); }
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ═══════════════════════════════════════════
+   SECTION BASE
+═══════════════════════════════════════════ */
+.section {
+  padding: clamp(80px, 14vw, 160px) clamp(24px, 7vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════
+   ORIGIN
+═══════════════════════════════════════════ */
+#origin {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (min-width: 720px) {
+  #origin { grid-template-columns: 5fr 4fr; gap: 80px; }
+}
+
+.origin-photo-wrap {
+  position: relative;
+}
+
+.origin-photo {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: grayscale(100%) contrast(1.05);
+  transition: filter 0.7s ease;
+}
+
+.origin-photo-wrap:hover .origin-photo {
+  filter: grayscale(85%) contrast(1.05);
+}
+
+.origin-photo-frame {
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  border: 1px solid var(--grey-dark);
+  z-index: -1;
+  transition: inset 0.5s ease;
+}
+
+.origin-photo-wrap:hover .origin-photo-frame {
+  inset: 8px -8px -8px 8px;
+}
+
+.origin-text {}
+
+.origin-heading {
+  font-family: var(--serif);
+  font-size: clamp(48px, 12vw, 96px);
+  font-weight: 300;
+  line-height: 0.9;
+  margin: 16px 0 36px;
+  letter-spacing: -0.02em;
+}
+
+.origin-heading em { font-style: italic; }
+
+.origin-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 4vw, 26px);
+  line-height: 1.45;
+  color: var(--off-white);
+  margin-bottom: 28px;
+  border-left: 1px solid var(--grey-dark);
+  padding-left: 20px;
+}
+
+.origin-body {
+  font-size: 14px;
+  line-height: 1.95;
+  color: var(--grey);
+  max-width: 380px;
+}
+
+.origin-coords {
+  margin-top: 32px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #444;
+  font-family: var(--sans);
+}
+
+/* ─ second origin block ─ */
+#origin-2 {
+  padding-top: 0 !important;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 7vw, 100px) clamp(80px, 14vw, 160px);
+}
+
+@media (min-width: 720px) {
+  #origin-2 { grid-template-columns: 4fr 5fr; gap: 80px; }
+  #origin-2 .o2-text { order: 1; }
+  #origin-2 .o2-photo { order: 2; }
+}
+
+.o2-photo img {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: grayscale(100%);
+  transition: filter 0.7s ease;
+}
+
+.o2-photo:hover img { filter: grayscale(80%); }
+
+/* ═══════════════════════════════════════════
+   COUNTER
+═══════════════════════════════════════════ */
+#counter {
+  text-align: center;
+  padding: clamp(60px, 10vw, 100px) clamp(24px, 7vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid #161616;
+  border-bottom: 1px solid #161616;
+}
+
+.counter-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.counter-item {
+  flex: 1 1 120px;
+  min-width: 100px;
+  max-width: 200px;
+  padding: 24px 16px;
+  position: relative;
+}
+
+.counter-item + .counter-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: #1e1e1e;
+}
+
+.counter-num {
+  font-family: var(--serif);
+  font-size: clamp(44px, 12vw, 80px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  display: block;
+}
+
+.counter-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 10px;
+}
+
+/* ═══════════════════════════════════════════
+   FULL BLEED QUOTE
+═══════════════════════════════════════════ */
+.full-bleed {
+  position: relative;
+  height: clamp(320px, 55vw, 560px);
+  overflow: hidden;
+}
+
+.full-bleed-img {
+  width: 100%;
+  height: 130%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: grayscale(100%) brightness(0.35) contrast(1.1);
+  will-change: transform;
+  margin-top: -10%;
+}
+
+.full-bleed-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.4), rgba(8,8,8,0.2), rgba(8,8,8,0.5));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.full-bleed-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(24px, 5.5vw, 52px);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 680px;
+  color: var(--white);
+}
+
+/* ═══════════════════════════════════════════
+   TRAVELS
+═══════════════════════════════════════════ */
+#travels { padding-bottom: 0; }
+
+.travels-header {
+  margin-bottom: 52px;
+}
+
+.travels-title {
+  font-family: var(--serif);
+  font-size: clamp(44px, 11vw, 88px);
+  font-weight: 300;
+  line-height: 0.9;
+  margin-top: 14px;
+  letter-spacing: -0.02em;
+}
+.travels-title em { font-style: italic; }
+
+/* mosaic grid */
+.travels-mosaic {
+  display: grid;
+  gap: 3px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+}
+
+@media (min-width: 640px) {
+  .travels-mosaic {
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 280px 280px;
+  }
+  .t-item:nth-child(1) { grid-column: 1 / 6;  grid-row: 1; }
+  .t-item:nth-child(2) { grid-column: 6 / 9;  grid-row: 1; }
+  .t-item:nth-child(3) { grid-column: 9 / 13; grid-row: 1; }
+  .t-item:nth-child(4) { grid-column: 1 / 5;  grid-row: 2; }
+  .t-item:nth-child(5) { grid-column: 5 / 13; grid-row: 2; }
+}
+
+.t-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: default;
+}
+
+@media (min-width: 640px) {
+  .t-item { aspect-ratio: unset; }
+}
+
+.t-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.65);
+  transform: scale(1.05);
+  transition: filter 0.6s ease, transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+.t-item:hover img {
+  filter: grayscale(50%) brightness(0.8);
+  transform: scale(1.0);
+}
+
+.t-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,0.75) 0%, transparent 55%);
+  z-index: 1;
+}
+
+.t-item-label {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  z-index: 2;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.75);
+}
+
+/* ═══════════════════════════════════════════
+   MESIE LANE
+═══════════════════════════════════════════ */
+#mesie {
+  text-align: center;
+}
+
+.mesie-heading {
+  font-family: var(--serif);
+  font-size: clamp(48px, 13vw, 100px);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin: 14px 0;
+}
+.mesie-heading em { font-style: italic; }
+
+.mesie-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 3.5vw, 20px);
+  color: var(--grey);
+  margin-bottom: 52px;
+  line-height: 1.5;
+}
+
+.mesie-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 3px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+@media (min-width: 560px) {
+  .mesie-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 220px 220px;
+  }
+  .m-item:nth-child(1) { grid-column: 1 / 4; grid-row: 1; }
+  .m-item:nth-child(2) { grid-column: 4 / 7; grid-row: 1; }
+  .m-item:nth-child(3) { grid-column: 1 / 3; grid-row: 2; }
+  .m-item:nth-child(4) { grid-column: 3 / 5; grid-row: 2; }
+  .m-item:nth-child(5) { grid-column: 5 / 7; grid-row: 2; }
+}
+
+.m-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: default;
+}
+
+@media (min-width: 560px) { .m-item { aspect-ratio: unset; } }
+
+.m-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  filter: grayscale(100%) contrast(1.08);
+  transform: scale(1.06);
+  transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.5s ease;
+}
+
+.m-item:hover img {
+  transform: scale(1.0);
+  filter: grayscale(85%) contrast(1.08);
+}
+
+.m-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,0.8) 0%, transparent 55%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.m-item:hover .m-item-overlay { opacity: 1; }
+
+.m-item-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--white);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.m-item:hover .m-item-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* easter egg trigger */
+.m-item.easter-trigger { cursor: pointer; }
+
+.mesie-note {
+  margin-top: 40px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: #3a3a3a;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════
+   TODAY / CIERRE
+═══════════════════════════════════════════ */
+#today {
+  text-align: center;
+  position: relative;
+}
+
+.today-ghost {
+  font-family: var(--serif);
+  font-size: clamp(100px, 30vw, 240px);
+  font-weight: 300;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245,243,239,0.06);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  margin-bottom: -0.35em;
+  display: block;
+}
+
+.today-photo-wrap {
+  width: min(380px, 85vw);
+  margin: 0 auto 56px;
+  position: relative;
+}
+
+.today-photo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border: 1px solid #1c1c1c;
+  z-index: 0;
+}
+
+.today-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: center 10%;
+  filter: grayscale(100%);
+  position: relative;
+  z-index: 1;
+  transition: filter 0.7s ease;
+}
+
+.today-photo-wrap:hover .today-photo {
+  filter: grayscale(70%);
+}
+
+.today-message {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 5.5vw, 44px);
+  font-weight: 300;
+  line-height: 1.4;
+  max-width: 640px;
+  margin: 0 auto 24px;
+  color: var(--white);
+}
+
+.today-sub {
+  font-size: 14px;
+  color: var(--grey);
+  line-height: 1.9;
+  max-width: 440px;
+  margin: 0 auto 52px;
+  font-style: italic;
+}
+
+.today-sig {
+  font-family: var(--serif);
+  font-size: clamp(32px, 9vw, 64px);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(245,243,239,0.12);
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  text-align: center;
+  padding: 52px 24px max(40px, env(safe-area-inset-bottom));
+  border-top: 1px solid #111;
+}
+
+.footer-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: #2e2e2e;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.footer-paw {
+  font-size: 18px;
+  opacity: 0.25;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.3s;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.footer-paw:hover { opacity: 0.7; transform: scale(1.3) rotate(-10deg); }
+
+/* ═══════════════════════════════════════════
+   EASTER EGG MODAL
+═══════════════════════════════════════════ */
+#ee-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,8,8,0.97);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  backdrop-filter: blur(8px);
+}
+#ee-modal.open { display: flex; }
+
+.ee-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 540px;
+  width: 100%;
+  animation: eeIn 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+
+@keyframes eeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ee-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 10%;
+  filter: grayscale(100%);
+  border: 1px solid #1e3d22;
+  margin-bottom: 24px;
+}
+
+.ee-terminal {
+  width: 100%;
+  background: #0c1a0e;
+  border: 1px solid #183020;
+  border-radius: 6px;
+  padding: 24px 28px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(12px, 2.8vw, 14px);
+  line-height: 2;
+  color: #5ab86c;
+}
+
+.ee-terminal .c  { color: #3a6640; }   /* comment */
+.ee-terminal .k  { color: #7dcf8a; }   /* keyword */
+.ee-terminal .s  { color: #aae0b2; }   /* string */
+.ee-terminal .n  { color: #5ab86c; }   /* number */
+
+.ee-close-btn {
+  margin-top: 28px;
+  background: none;
+  border: 1px solid #1e3d22;
+  color: #3a6640;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 12px 32px;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+}
+.ee-close-btn:hover { border-color: #5ab86c; color: #7dcf8a; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE TWEAKS
+═══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .origin-photo-frame { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  HERO                                ║
+     ╚══════════════════════════════════════╝ -->
+<div id="hero">
+  <div id="hero-bg"></div>
+  <div id="hero-vignette"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">20 · 03 · 2016</p>
+    <h1 class="hero-title">
+      <span class="italic-line">Diez</span>
+      <span class="regular-line">años</span>
+    </h1>
+    <p class="hero-names">Flor & Lean</p>
+    <a href="#origin" class="hero-btn">Entrar</a>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-bar"></div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  ORIGIN — Cartagena                  ║
+     ╚══════════════════════════════════════╝ -->
+<section class="section" id="origin">
+  <div class="origin-photo-wrap reveal left">
+    <img class="origin-photo" src="fotos/cartagena-noche.jpg" alt="Cartagena de noche, 2016" loading="lazy">
+    <div class="origin-photo-frame"></div>
+  </div>
+  <div class="origin-text">
+    <span class="label reveal d1">El comienzo · 2016</span>
+    <h2 class="origin-heading reveal d2"><em>Islas</em><br>Barú</h2>
+    <p class="origin-quote reveal d3">Todo empezo por manguearme una Oreo.</p>
+    <p class="origin-body reveal d4">
+      Cartagena, marzo de 2016. Una playa en Islas Barú,
+      dos mesies y algo que desde el primer momento
+      supo exactamente a dónde iba (A comer mucho).
+    </p>
+    <p class="origin-coords reveal d5">10°14′N · 75°32′W — Islas Barú, Colombia</p>
+  </div>
+</section>
+
+<!-- ─ Second origin: casa + vino ─ -->
+<div id="origin-2">
+  <div class="o2-text">
+    <span class="label reveal d1">Los primeros tiempos</span>
+    <h2 class="origin-heading reveal d2"><em>Lo</em><br>cotidiano</h2>
+    <p class="origin-quote reveal d3">Tomabamos Emilia, no habia un sope</p>
+    <p class="origin-body reveal d4">
+      Dos mesies , un vinito y algo rico, desde hace 10 añitos
+    </p>
+  </div>
+  <div class="o2-photo reveal right">
+    <img src="fotos/casa-vino.jpg" alt="Casa, 2016" loading="lazy">
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  COUNTER                             ║
+     ╚══════════════════════════════════════╝ -->
+<div id="counter">
+  <p class="label reveal" style="margin-bottom:44px">Una década en números</p>
+  <div class="counter-grid">
+    <div class="counter-item reveal d1">
+      <span class="counter-num" data-target="10">0</span>
+      <span class="counter-label">Años</span>
+    </div>
+    <div class="counter-item reveal d2">
+      <span class="counter-num" data-target="10">0</span>
+      <span class="counter-label">Países</span>
+    </div>
+    <div class="counter-item reveal d3">
+      <span class="counter-num" data-target="1">0</span>
+      <span class="counter-label">Mesie</span>
+    </div>
+    <div class="counter-item reveal d4">
+      <span class="counter-num" data-target="3650">0</span>
+      <span class="counter-label">Días</span>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  FULL BLEED — Alhambra               ║
+     ╚══════════════════════════════════════╝ -->
+<div class="full-bleed">
+  <img class="full-bleed-img parallax-img" src="fotos/granada-alhambra.jpg" alt="La Alhambra, Granada" loading="lazy">
+  <div class="full-bleed-overlay">
+    <blockquote class="full-bleed-quote reveal scale">
+      Detras de Lana , hay un mesie.
+    </blockquote>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  TRAVELS                             ║
+     ╚══════════════════════════════════════╝ -->
+<section class="section" id="travels">
+  <div class="travels-header">
+    <span class="label reveal">Los lugares que nos marcaron</span>
+    <h2 class="travels-title reveal d1">Nuestro<br><em>mapa</em></h2>
+  </div>
+  <div class="travels-mosaic">
+    <div class="t-item reveal d1">
+      <img src="fotos/mallorca-espana.jpg" alt="Mallorca, España" loading="lazy">
+      <div class="t-item-overlay"></div>
+      <span class="t-item-label">España</span>
+    </div>
+    <div class="t-item reveal d2">
+      <img src="fotos/lisboa-portugal.jpg" alt="Lisboa, Portugal" loading="lazy">
+      <div class="t-item-overlay"></div>
+      <span class="t-item-label">Portugal</span>
+    </div>
+    <div class="t-item reveal d3">
+      <img src="fotos/roma-italia.jpg" alt="Roma, Italia" loading="lazy">
+      <div class="t-item-overlay"></div>
+      <span class="t-item-label">Italia</span>
+    </div>
+    <div class="t-item reveal d4">
+      <img src="fotos/punta-cana.jpg" alt="Punta Cana" loading="lazy">
+      <div class="t-item-overlay"></div>
+      <span class="t-item-label">Caribe</span>
+    </div>
+    <div class="t-item reveal d5">
+      <img src="fotos/granada-alhambra.jpg" alt="Granada, España" loading="lazy">
+      <div class="t-item-overlay"></div>
+      <span class="t-item-label">Andalucía</span>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  FULL BLEED — Trevi                  ║
+     ╚══════════════════════════════════════╝ -->
+<div class="full-bleed">
+  <img class="full-bleed-img parallax-img" src="fotos/roma-italia.jpg" alt="Fontana di Trevi, Roma" loading="lazy">
+  <div class="full-bleed-overlay">
+    <blockquote class="full-bleed-quote reveal scale">
+    </blockquote>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  MESIE LANE                          ║
+     ╚══════════════════════════════════════╝ -->
+<section class="section" id="mesie">
+  <span class="label reveal">La integrante más importante · desde 2017</span>
+  <h2 class="mesie-heading reveal d1"><em>Mesie</em><br>Lane</h2>
+  <p class="mesie-sub reveal d2">
+    Dueña del departamento desde el primer día.<br>
+    Especialista en chiches , en ser un mesie y todas sus ingenieras y especialidad.
+  </p>
+
+  <div class="mesie-grid">
+    <div class="m-item reveal d1">
+      <img src="fotos/mesie-ojos.jpg" alt="Mesie Lane" loading="lazy">
+      <div class="m-item-overlay"></div>
+      <div class="m-item-caption">Mesie Lane</div>
+    </div>
+    <div class="m-item reveal d2">
+      <img src="fotos/mesie-sofa.jpg" alt="Mesie Lane" loading="lazy">
+      <div class="m-item-overlay"></div>
+      <div class="m-item-caption">Lana Banana</div>
+    </div>
+    <div class="m-item reveal d3">
+      <img src="fotos/mesie-mojada.jpg" alt="Mesie Lane" loading="lazy">
+      <div class="m-item-overlay"></div>
+      <div class="m-item-caption">Bananita</div>
+    </div>
+    <div class="m-item reveal d4">
+      <img src="fotos/mesie-balcon.jpg" alt="Mesie Lane" loading="lazy">
+      <div class="m-item-overlay"></div>
+      <div class="m-item-caption">Qul'Sec</div>
+    </div>
+    <div class="m-item easter-trigger reveal d5" id="mesie-pc-item">
+      <img src="fotos/mesie-pc.jpg" alt="Mesie Lane Senior Dev" loading="lazy">
+      <div class="m-item-overlay"></div>
+      <div class="m-item-caption">Mesie gotitas de agua</div>
+    </div>
+  </div>
+  <p class="mesie-note reveal d1">Mesie Lane · 2017</p>
+</section>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  TODAY                               ║
+     ╚══════════════════════════════════════╝ -->
+<section class="section" id="today">
+  <span class="today-ghost reveal">X</span>
+  <span class="label reveal" style="display:block; margin-bottom:48px">Hoy</span>
+
+  <div class="today-photo-wrap reveal scale">
+    <img class="today-photo" src="fotos/foto-actual.jpg" alt="Flor y Lean, 2025" loading="lazy">
+  </div>
+
+  <!-- ✏️ EDITABLE: cambiá este mensaje -->
+  <p class="today-message reveal">
+    "Diez años, y todavía me aguantas<br>es todo un logro."
+  </p>
+
+  <!-- ✏️ EDITABLE: subtexto -->
+  <p class="today-sub reveal d1">
+    Gracias por cada día de estos 10 años<br>gracias por todos los viajes, las comidas y por ser la mejor 
+  </p>
+
+  <div class="today-sig reveal d2">Flor & Lean</div>
+</section>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  FOOTER                              ║
+     ╚══════════════════════════════════════╝ -->
+<footer>
+  <p class="footer-line">20 · 03 · 2016 — 20 · 03 · 2026</p>
+  <span class="footer-paw" id="paw-btn" title="🐾">🐾</span>
+</footer>
+
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+/* ── Hero Ken Burns ── */
+window.addEventListener('load', () => {
+  document.getElementById('hero-bg').classList.add('kenburns');
+});
+
+/* ── Scroll Reveal ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ── Animated Counters ── */
+const counterEls = document.querySelectorAll('[data-target]');
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const target = parseInt(e.target.dataset.target, 10);
+    const duration = target > 100 ? 1800 : 900;
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      e.target.textContent = Math.round(eased * target).toLocaleString('es');
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    counterObs.unobserve(e.target);
+  });
+}, { threshold: 0.5 });
+counterEls.forEach(el => counterObs.observe(el));
+
+/* ── Parallax on full-bleed images ── */
+const parallaxImgs = document.querySelectorAll('.parallax-img');
+function onScroll() {
+  parallaxImgs.forEach(img => {
+    const rect = img.closest('.full-bleed').getBoundingClientRect();
+    const progress = rect.top / window.innerHeight;
+    img.style.transform = `translateY(${progress * 40}px)`;
+  });
+  // hero bg parallax
+  const heroEl = document.getElementById('hero-bg');
+  if (window.scrollY < window.innerHeight * 1.2) {
+    heroEl.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+  }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ── Smooth hero CTA ── */
+document.querySelector('.hero-btn').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('origin').scrollIntoView({ behavior: 'smooth' });
+});
+
+
+// Konami code: ↑↑↓↓←→←→BA
+let seq = [];
+const code = [38,38,40,40,37,39,37,39,66,65];
+document.addEventListener('keydown', e => {
+  seq.push(e.keyCode);
+  seq = seq.slice(-10);
+  if (seq.join() === code.join()) openEE();
+});
+</script>
+</body>
+</html>
