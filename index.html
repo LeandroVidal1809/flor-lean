@@ -100,7 +100,7 @@ img { display: block; max-width: 100%; }
   inset: -8%;
   background: url('fotos/cartagena-noche.jpg') center 32% / cover no-repeat;
   /* Foto del hero: mantenemos en grises para el drama del primer impacto */
-  filter: grayscale(100%) brightness(0.22) contrast(1.15);
+  filter: grayscale(100%) brightness(0.34) contrast(1.1);
   will-change: transform;
   transition: transform 13s cubic-bezier(0.25,0.46,0.45,0.94);
   transform: scale(1.1);
@@ -123,28 +123,28 @@ img { display: block; max-width: 100%; }
 
 .h-eye {
   font-size: 11px; letter-spacing: 0.54em;
-  color: rgba(245,242,235,0.38);
+  color: rgba(245,242,235,0.62);
   font-family: var(--sans); font-weight: 300;
   margin-bottom: 22px;
 }
 .h-title {
   font-family: var(--serif); font-weight: 300;
-  font-size: clamp(78px, 23vw, 172px);
+  font-size: clamp(90px, 26vw, 210px);
   line-height: 0.86; letter-spacing: -0.03em;
   color: var(--white);
 }
 .h-title em  { font-style: italic; display: block; }
-.h-title span { display: block; color: rgba(245,242,235,0.32); }
+.h-title span { display: block; color: rgba(245,242,235,0.45); }
 .h-names {
   margin-top: 22px;
   font-family: var(--serif); font-style: italic;
   font-size: clamp(17px, 4.5vw, 26px);
-  color: rgba(245,242,235,0.42); letter-spacing: 0.07em;
+  color: rgba(245,242,235,0.68); letter-spacing: 0.07em;
 }
 .h-btn {
   display: inline-block; margin-top: 50px;
   padding: 14px 44px;
-  border: 1px solid rgba(245,242,235,0.22);
+  border: 1px solid rgba(245,242,235,0.5);
   color: rgba(245,242,235,0.8);
   font-family: var(--sans); font-size: 10px; font-weight: 400;
   letter-spacing: 0.38em; text-transform: uppercase;
@@ -303,7 +303,7 @@ img { display: block; max-width: 100%; }
   width: 100%; height: 130%;
   object-fit: cover; object-position: center 38%;
   /* A color pero oscurecido para legibilidad del texto */
-  filter: saturate(0.65) brightness(0.38) contrast(1.08);
+  filter: saturate(0.82) brightness(0.55) contrast(1.06);
   will-change: transform; margin-top: -10%;
 }
 .bleed-over {
@@ -612,6 +612,33 @@ footer {
   .pstack-border { display:none; }
 }
 
+
+#hero-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 4; pointer-events: none;
+}
+.hero-badge {
+  position: absolute;
+  top: clamp(20px,5vw,40px); right: clamp(18px,5vw,40px);
+  z-index: 5;
+  width: clamp(72px,13vw,96px); height: clamp(72px,13vw,96px);
+  opacity: 0; pointer-events: none;
+  animation: badgeAppear 1.2s cubic-bezier(0.34,1.56,0.64,1) 1.6s forwards;
+}
+@keyframes badgeAppear {
+  from { opacity:0; transform:scale(0.6) rotate(-30deg); }
+  to   { opacity:1; transform:scale(1) rotate(-8deg); }
+}
+.hero-badge-ring { width:100%; height:100%; animation:ringTurn 18s linear infinite; }
+@keyframes ringTurn { to { transform:rotate(360deg); } }
+.hero-badge-x {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-style:italic; font-weight:300;
+  font-size:clamp(22px,4.5vw,30px); color:rgba(245,242,235,0.8);
+  animation:ringTurn 18s linear infinite reverse;
+}
+
 </style>
 </head>
 <body>
@@ -630,6 +657,20 @@ footer {
     <a href="#oa" class="h-btn">vamo' a darle</a>
   </div>
   <div class="h-line"><div class="h-line-bar"></div></div>
+
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-badge" aria-hidden="true">
+    <svg class="hero-badge-ring" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="46" stroke="rgba(245,242,235,0.2)" stroke-width="0.8"/>
+      <circle cx="50" cy="50" r="38" stroke="rgba(245,242,235,0.08)" stroke-width="0.5"/>
+      <defs><path id="bp" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
+      <text font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(245,242,235,0.45)" letter-spacing="2.8" font-weight="300">
+        <textPath href="#bp">20·03·2016  ·  20·03·2026  ·  </textPath>
+      </text>
+    </svg>
+    <div class="hero-badge-x">X</div>
+  </div>
+
 </div>
 
 <!-- ██ ORIGIN A ██ -->
@@ -882,6 +923,370 @@ document.addEventListener('keydown', e => {
   sq.push(e.keyCode); sq = sq.slice(-10);
   if(sq.join() === [38,38,40,40,37,39,37,39,66,65].join()) open();
 });
+
+(function(){
+const canvas = document.getElementById('hero-canvas');
+if(!canvas) return;
+const ctx = canvas.getContext('2d');
+
+function resize(){
+  const p = canvas.parentElement;
+  canvas.width = p.offsetWidth;
+  canvas.height = p.offsetHeight;
+}
+resize();
+window.addEventListener('resize',()=>{ resize(); cat.init(); },{passive:true});
+
+/* ─── Paleta de colores gomitas de pelo ─── */
+const COLORS = [
+  {main:'#e03050',dark:'#901828',light:'#f06878',shine:'#ffaab8'},
+  {main:'#e06820',dark:'#904010',light:'#f09858',shine:'#ffd098'},
+  {main:'#d0b010',dark:'#806800',light:'#e8d050',shine:'#fff0a0'},
+  {main:'#28a040',dark:'#106028',light:'#60c870',shine:'#a8f0b8'},
+  {main:'#2860d8',dark:'#0838a0',light:'#6898f0',shine:'#b0ccff'},
+  {main:'#8830c8',dark:'#500890',light:'#b868e8',shine:'#e0b0ff'},
+  {main:'#d82888',dark:'#900850',light:'#f068b8',shine:'#ffb0e0'},
+  {main:'#18b0d0',dark:'#087888',light:'#58d8f0',shine:'#a0f0ff'},
+  {main:'#2090a0',dark:'#105868',light:'#50c0d0',shine:'#90e8f0'},
+  {main:'#b04018',dark:'#702808',light:'#d07848',shine:'#f0b890'},
+];
+
+/* ─── Gomita de pelo ─── */
+const band = {
+  x:0, y:0, vx:0, vy:0,
+  angle:0, av:0.055,
+  rx:14, ry:12,       // radios de la elipse (anillo)
+  speed:3.2,
+  ci:0,              // índice de color
+  held:false,
+
+  init(){
+    this.x = canvas.width*0.58; this.y = canvas.height*0.3;
+    const a = -Math.PI*0.4 - Math.random()*0.5;
+    this.vx = Math.cos(a)*this.speed; this.vy = Math.sin(a)*this.speed;
+    this.angle = Math.random()*Math.PI;
+    this.ci = Math.floor(Math.random()*COLORS.length);
+  },
+
+  bounce(){
+    const pad = this.rx + 16;
+    if(this.x<pad||this.x>canvas.width-pad){ this.vx*=-1; this.x=Math.max(pad,Math.min(canvas.width-pad,this.x)); }
+    if(this.y<pad||this.y>canvas.height-pad){ this.vy*=-1; this.y=Math.max(pad,Math.min(canvas.height-pad,this.y)); }
+    const s=Math.hypot(this.vx,this.vy);
+    if(s>0.1){ this.vx=this.vx/s*this.speed; this.vy=this.vy/s*this.speed; }
+  },
+
+  update(){
+    if(this.held) return;
+    this.bounce();
+    this.x+=this.vx; this.y+=this.vy;
+    this.angle+=this.av;
+  },
+
+  /* Dibuja el anillo de goma: toro en perspectiva */
+  draw(alpha){
+    const c = COLORS[this.ci];
+    const a = alpha??1;
+    const rx=this.rx, ry=this.ry, T=3; // T = grosor del tubo
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.angle);
+    ctx.globalAlpha = a;
+
+    // sombra
+    ctx.beginPath();
+    ctx.ellipse(1.5,3,rx+T,ry+T*0.45,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,0.18)'; ctx.fill();
+
+    // parte trasera (más oscura, debajo)
+    ctx.beginPath();
+    ctx.ellipse(0,0,rx+T*0.6,ry+T*0.6,0,0,Math.PI*2);
+    ctx.fillStyle=c.dark; ctx.fill();
+
+    // agujero central
+    ctx.beginPath();
+    ctx.ellipse(0,0,rx-T*0.6,ry-T*0.6,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(6,6,6,0.88)'; ctx.fill();
+
+    // tubo principal — stroke grueso sobre la elipse
+    ctx.beginPath();
+    ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+    ctx.strokeStyle=c.main; ctx.lineWidth=T*2.2; ctx.stroke();
+
+    // capa de luz (gradiente de arriba a abajo)
+    const grd=ctx.createLinearGradient(0,-ry-T,0,ry+T);
+    grd.addColorStop(0,  c.shine+'dd');
+    grd.addColorStop(0.28,c.light+'99');
+    grd.addColorStop(0.65,c.main+'55');
+    grd.addColorStop(1,  c.dark+'ee');
+    ctx.beginPath();
+    ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+    ctx.strokeStyle=grd; ctx.lineWidth=T*2.2; ctx.stroke();
+
+    // línea de brillo superior
+    ctx.beginPath();
+    ctx.ellipse(0,-ry*0.08,rx*0.65,ry*0.5,0,Math.PI*1.12,Math.PI*1.88);
+    ctx.strokeStyle=c.shine+'bb'; ctx.lineWidth=2.5; ctx.stroke();
+
+    // textura de tela: hachuras radiales sutiles
+    ctx.globalAlpha=a*0.16;
+    for(let i=0;i<22;i++){
+      const ang=(i/22)*Math.PI*2;
+      const ex=Math.cos(ang)*rx, ey=Math.sin(ang)*ry;
+      const nx=-Math.sin(ang)*T*0.85, ny=Math.cos(ang)*(ry/rx)*T*0.85;
+      ctx.beginPath();
+      ctx.moveTo(ex-nx*0.5,ey-ny*0.5); ctx.lineTo(ex+nx*0.5,ey+ny*0.5);
+      ctx.strokeStyle=c.shine; ctx.lineWidth=0.9; ctx.stroke();
+    }
+    ctx.globalAlpha=a;
+
+    // costura (junta lateral)
+    ctx.beginPath();
+    ctx.ellipse(rx,0,2.5,T*0.55,0,0,Math.PI*2);
+    ctx.fillStyle=c.dark; ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(rx,0,1,T*0.28,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.fill();
+
+    ctx.restore();
+  }
+};
+
+/* ─── Gatita ─── */
+const cat = {
+  x:100, y:0, vx:0, vy:0,
+  facing:1,
+  W:62, H:46,
+  legPhase:0,
+  jumping:false, jumpVy:0, groundY:0,
+  blinkTimer:0, blinking:false,
+  tailAngle:0, tailDir:1,
+  /* maquina de estado */
+  state:'chase',   // chase | reach | hold | toss
+  stateT:0,
+  armExt:0,        // 0=reposo 1=extendido
+  speed:2.5,
+
+  init(){
+    this.groundY = canvas.height-54;
+    this.x=100; this.y=this.groundY;
+  },
+
+  setState(s,t){ this.state=s; this.stateT=t; },
+
+  update(){
+    this.groundY = canvas.height-54;
+    const dx=band.x-this.x, dy=band.y-this.y;
+    const dist=Math.hypot(dx,dy);
+
+    /* ── chase ── */
+    if(this.state==='chase'){
+      if(Math.abs(dx)>4){ this.vx+=(dx/Math.max(dist,1))*0.62; this.facing=dx>0?1:-1; }
+      this.vx*=0.83;
+      const mv=this.speed+(dist>200?1.6:0);
+      this.vx=Math.max(-mv,Math.min(mv,this.vx));
+      // salto si la gomita está arriba
+      if(!this.jumping && dy<-28 && dist<170){
+        this.jumping=true;
+        const h=Math.min(Math.abs(dy)*0.9,260);
+        this.jumpVy=-Math.sqrt(2*0.36*h);
+      }
+      // ¡atrapa!
+      if(dist<34){
+        band.held=true;
+        this.setState('reach',20);
+        this.armExt=0;
+      }
+    }
+    /* ── reach: extiende brazos ── */
+    else if(this.state==='reach'){
+      this.vx*=0.7;
+      this.armExt=Math.min(1,this.armExt+0.07);
+      // gomita sigue a las manos
+      band.x=this.x+this.facing*this.W*0.42;
+      band.y=this.y-this.H*0.52;
+      this.stateT--;
+      if(this.stateT<=0) this.setState('hold',44);
+    }
+    /* ── hold: la sostiene ── */
+    else if(this.state==='hold'){
+      this.vx*=0.7;
+      this.armExt=1;
+      band.x=this.x+this.facing*this.W*0.42;
+      band.y=this.y-this.H*0.52;
+      this.stateT--;
+      if(this.stateT<=0){
+        band.held=false;
+        // lanzar hacia arriba en ángulo
+        const flip=(Math.random()>0.5?1:-1);
+        band.vx=flip*band.speed*(1.4+Math.random()*0.8);
+        band.vy=-band.speed*(1.2+Math.random()*0.6);
+        band.ci=(band.ci+1)%COLORS.length;
+        this.setState('toss',14);
+      }
+    }
+    /* ── toss: retrae brazos ── */
+    else if(this.state==='toss'){
+      this.vx*=0.7;
+      this.armExt=Math.max(0,this.armExt-0.09);
+      this.stateT--;
+      if(this.stateT<=0){ this.setState('chase',0); }
+    }
+
+    /* ── física vertical ── */
+    if(this.jumping){
+      this.vy+=0.36; this.y+=this.vy;
+      if(this.y>=this.groundY){ this.y=this.groundY; this.vy=0; this.jumping=false; }
+    } else { this.y=this.groundY; }
+
+    this.x+=this.vx;
+    const pad=this.W*0.5+8;
+    this.x=Math.max(pad,Math.min(canvas.width-pad,this.x));
+
+    if(Math.abs(this.vx)>0.3) this.legPhase+=0.17*(1+Math.abs(this.vx)*0.07);
+    this.tailAngle+=0.05*this.tailDir;
+    if(Math.abs(this.tailAngle)>0.55) this.tailDir*=-1;
+    this.blinkTimer++;
+    if(this.blinkTimer>210&&!this.blinking){
+      this.blinking=true; this.blinkTimer=0;
+      setTimeout(()=>{ this.blinking=false; },110);
+    }
+  },
+
+  draw(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.scale(this.facing,1);
+    const W=this.W, H=this.H;
+    const sqY=this.jumping?0.87:1;
+    ctx.save(); ctx.scale(1,sqY);
+
+    /* sombra */
+    ctx.beginPath();
+    ctx.ellipse(0,8/sqY,W*0.35*(this.jumping?0.55:1),4,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,0.2)'; ctx.fill();
+
+    /* cola */
+    ctx.save();
+    ctx.translate(-W*0.44,-H*0.18);
+    ctx.rotate(this.tailAngle+(this.jumping?-0.35:0));
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(-12,-16,-9,-30,2,-36);
+    ctx.strokeStyle='rgba(245,242,235,0.88)'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(2,-36,4.5,0,Math.PI*2);
+    ctx.fillStyle='rgba(245,242,235,0.75)'; ctx.fill();
+    ctx.restore();
+
+    /* patas traseras */
+    const l1=Math.sin(this.legPhase)*9, l2=Math.sin(this.legPhase+Math.PI)*9;
+    const jB=this.jumping?-7:0;
+    ctx.strokeStyle='rgba(245,242,235,0.7)'; ctx.lineWidth=4; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(-W*0.28,-H*0.05); ctx.lineTo(-W*0.26+l1*0.3,H*0.26+jB); ctx.lineTo(-W*0.16+l1*0.5,H*0.28+jB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-W*0.14,-H*0.05); ctx.lineTo(-W*0.12+l2*0.3,H*0.26+jB); ctx.lineTo(-W*0.02+l2*0.5,H*0.28+jB); ctx.stroke();
+
+    /* cuerpo */
+    ctx.beginPath(); ctx.ellipse(0,-H*0.24,W*0.41,H*0.29,-0.08,0,Math.PI*2);
+    ctx.fillStyle='rgba(245,242,235,0.055)'; ctx.fill();
+    ctx.strokeStyle='rgba(245,242,235,0.88)'; ctx.lineWidth=2.2; ctx.stroke();
+
+    /* ── BRAZOS / patas delanteras ──
+       armExt = 0 → caminando normal
+       armExt = 1 → brazos extendidos sosteniendo la gomita  */
+    const ae=this.armExt;
+    const jF=this.jumping?-11:0;
+    ctx.strokeStyle='rgba(245,242,235,0.88)'; ctx.lineWidth=4; ctx.lineCap='round';
+
+    if(ae<0.05){
+      /* reposo/caminar */
+      ctx.beginPath(); ctx.moveTo(W*0.16,-H*0.08); ctx.lineTo(W*0.18+l1*0.4,H*0.24+jF); ctx.lineTo(W*0.28+l1*0.6,H*0.26+jF); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(W*0.28,-H*0.08); ctx.lineTo(W*0.30+l2*0.4,H*0.24+jF); ctx.lineTo(W*0.40+l2*0.6,H*0.26+jF); ctx.stroke();
+    } else {
+      /* brazos extendidos — interpolación suave */
+      // brazo izquierdo (cerca)
+      const ax1=W*(0.16+ae*0.10), ay1=-H*(0.08+ae*0.30);
+      const ax2=W*(0.24+ae*0.18), ay2=-H*(0.06+ae*0.48);
+      ctx.beginPath(); ctx.moveTo(W*0.16,-H*0.08); ctx.lineTo(ax1,ay1); ctx.lineTo(ax2,ay2); ctx.stroke();
+      // brazo derecho (lejos)
+      const bx1=W*(0.28+ae*0.12), by1=-H*(0.08+ae*0.26);
+      const bx2=W*(0.36+ae*0.20), by2=-H*(0.06+ae*0.44);
+      ctx.beginPath(); ctx.moveTo(W*0.28,-H*0.08); ctx.lineTo(bx1,by1); ctx.lineTo(bx2,by2); ctx.stroke();
+
+      /* gomita en las manos durante reach/hold */
+      if(this.state==='reach'||this.state==='hold'){
+        ctx.save();
+        ctx.scale(1/this.facing,1);  // deshacer flip
+        band.draw(ae);
+        ctx.restore();
+      }
+    }
+
+    /* cuello */
+    ctx.beginPath(); ctx.moveTo(W*0.30,-H*0.40); ctx.lineTo(W*0.34,-H*0.54);
+    ctx.strokeStyle='rgba(245,242,235,0.75)'; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
+
+    /* cabeza */
+    ctx.beginPath(); ctx.ellipse(W*0.38,-H*0.68,W*0.23,W*0.21,0.08,0,Math.PI*2);
+    ctx.fillStyle='rgba(245,242,235,0.055)'; ctx.fill();
+    ctx.strokeStyle='rgba(245,242,235,0.9)'; ctx.lineWidth=2.2; ctx.stroke();
+
+    /* orejas */
+    [[W*0.22,-H*0.80,W*0.20,-H*1.02,W*0.31,-H*0.86],
+     [W*0.43,-H*0.86,W*0.49,-H*1.04,W*0.54,-H*0.82]
+    ].forEach(([x1,y1,x2,y2,x3,y3])=>{
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.lineTo(x3,y3); ctx.closePath();
+      ctx.fillStyle='rgba(245,242,235,0.09)'; ctx.fill();
+      ctx.strokeStyle='rgba(245,242,235,0.88)'; ctx.lineWidth=1.8; ctx.stroke();
+      const f=0.15;
+      ctx.beginPath();
+      ctx.moveTo(x1+(x2-x1)*f,y1+(y2-y1)*f);
+      ctx.lineTo(x2+(x3-x2)*f,y2+(y3-y2)*f);
+      ctx.lineTo(x3+(x1-x3)*f,y3+(y1-y3)*f);
+      ctx.closePath();
+      ctx.fillStyle='rgba(245,242,235,0.18)'; ctx.fill();
+    });
+
+    /* ojos */
+    const eyeSY=this.blinking?0.07:1;
+    const eR=W*0.074;
+    [[W*0.28,-H*0.70],[W*0.46,-H*0.70]].forEach(([ex,ey])=>{
+      ctx.save(); ctx.translate(ex,ey); ctx.scale(1,eyeSY);
+      ctx.beginPath(); ctx.arc(0,0,eR,0,Math.PI*2); ctx.fillStyle='#b8d400'; ctx.fill();
+      ctx.beginPath(); ctx.arc(0,0,eR*0.48,0,Math.PI*2); ctx.fillStyle='rgba(5,5,5,0.92)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(-eR*0.26,-eR*0.26,eR*0.2,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.68)'; ctx.fill();
+      ctx.restore();
+      ctx.save(); ctx.globalAlpha=0.26; ctx.shadowColor='#b8d400'; ctx.shadowBlur=9;
+      ctx.beginPath(); ctx.arc(ex,ey,eR,0,Math.PI*2); ctx.fillStyle='#b8d400'; ctx.fill();
+      ctx.restore();
+    });
+
+    /* nariz — sin boca */
+    ctx.beginPath();
+    ctx.moveTo(W*0.36,-H*0.61); ctx.lineTo(W*0.34,-H*0.57); ctx.lineTo(W*0.39,-H*0.57);
+    ctx.closePath(); ctx.fillStyle='rgba(245,242,235,0.5)'; ctx.fill();
+
+    /* bigotes */
+    ctx.strokeStyle='rgba(245,242,235,0.3)'; ctx.lineWidth=1; ctx.lineCap='round';
+    [[W*0.19,-H*0.60,W*0.33,-H*0.60],[W*0.19,-H*0.575,W*0.32,-H*0.575],
+     [W*0.42,-H*0.60,W*0.56,-H*0.585],[W*0.42,-H*0.575,W*0.55,-H*0.565]
+    ].forEach(([x1,y1,x2,y2])=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+
+    ctx.restore(); // sqY
+    ctx.restore(); // facing
+  }
+};
+
+band.init(); cat.init();
+
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  band.update();
+  cat.update();
+  if(!band.held) band.draw();
+  cat.draw();
+  requestAnimationFrame(loop);
+}
+loop();
+})();
+
 </script>
 </body>
 </html>
