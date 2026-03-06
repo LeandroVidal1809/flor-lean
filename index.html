@@ -8,7 +8,7 @@
       <div class="cap-header-text">
         <div class="cap-title-small">Verificación de seguridad</div>
         <div class="cap-instruction">
-          Seleccioná todas las imágenes que muestran <strong>una lana</strong>
+          Seleccioná todas las imágenes que muestran <strong>una mesie Lané</strong>
         </div>
       </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="cap-footer">
       <div class="cap-error" id="cap-error">Falta seleccionar alguna lana 🙀</div>
       <div class="cap-counter">Seleccionadas: <span id="cap-count">0</span></div>
-      <button class="cap-btn" id="cap-submit" disabled>Verificar</button>
+      <button class="cap-btn" id="cap-submit" disabled>check!</button>
     </div>
 
     <!-- Pantalla de éxito (se superpone) -->
@@ -1398,7 +1398,7 @@ const band = {
   draw(alpha){
     const c = COLORS[this.ci];
     const a = alpha??1;
-    const rx=this.rx, ry=this.ry, T=6; // T = grosor del tubo
+    const rx=this.rx, ry=this.ry, T=3; // T = grosor del tubo
     ctx.save();
     ctx.translate(this.x,this.y);
     ctx.rotate(this.angle);
@@ -1630,9 +1630,6 @@ const cat = {
       }
     }
 
-    /* cuello */
-    ctx.beginPath(); ctx.moveTo(W*0.30,-H*0.40); ctx.lineTo(W*0.34,-H*0.54);
-    ctx.strokeStyle='rgba(245,242,235,0.75)'; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
 
     /* cabeza */
     ctx.beginPath(); ctx.ellipse(W*0.38,-H*0.68,W*0.23,W*0.21,0.08,0,Math.PI*2);
