@@ -1,3 +1,38 @@
+
+<!-- ██████ CAPTCHA ██████ -->
+<div id="captcha-overlay" role="dialog" aria-modal="true" aria-label="Verificación">
+  <div class="cap-box" id="cap-box">
+
+    <div class="cap-header">
+      <div class="cap-logo">🐾</div>
+      <div class="cap-header-text">
+        <div class="cap-title-small">Verificación de seguridad</div>
+        <div class="cap-instruction">
+          Seleccioná todas las imágenes que muestran <strong>una lana</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap-grid" id="cap-grid">
+      <!-- Las celdas se generan por JS para poder mezclarlas -->
+    </div>
+
+    <div class="cap-footer">
+      <div class="cap-error" id="cap-error">Falta seleccionar alguna lana 🙀</div>
+      <div class="cap-counter">Seleccionadas: <span id="cap-count">0</span></div>
+      <button class="cap-btn" id="cap-submit" disabled>Verificar</button>
+    </div>
+
+    <!-- Pantalla de éxito (se superpone) -->
+    <div class="cap-success" id="cap-success">
+      <div class="cap-success-icon">🐾</div>
+      <div class="cap-success-text">¡Verificación superada!</div>
+      <div class="cap-success-sub">Bienvenidos · Flor & Lean</div>
+    </div>
+
+  </div>
+</div>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -612,7 +647,6 @@ footer {
   .pstack-border { display:none; }
 }
 
-
 #hero-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -638,6 +672,258 @@ footer {
   font-size:clamp(22px,4.5vw,30px); color:rgba(245,242,235,0.8);
   animation:ringTurn 18s linear infinite reverse;
 }
+
+
+
+/* ══════════════════════════════════════════
+   CAPTCHA OVERLAY — antes de entrar al sitio
+══════════════════════════════════════════ */
+#captcha-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(5,5,5,0.96);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: var(--sans);
+}
+
+.cap-box {
+  background: #111;
+  border: 1px solid rgba(245,242,235,0.12);
+  border-radius: 8px;
+  width: min(480px, 100%);
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  animation: capIn 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes capIn {
+  from { opacity:0; transform: translateY(24px) scale(0.97); }
+  to   { opacity:1; transform: none; }
+}
+
+/* Header del captcha */
+.cap-header {
+  background: #0d0d0d;
+  border-bottom: 1px solid rgba(245,242,235,0.08);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cap-logo {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  border: 1px solid rgba(245,242,235,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.cap-header-text { flex: 1; }
+.cap-title-small {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245,242,235,0.35);
+  margin-bottom: 2px;
+}
+.cap-instruction {
+  font-size: 13px;
+  color: rgba(245,242,235,0.85);
+  font-weight: 300;
+  line-height: 1.4;
+}
+.cap-instruction strong {
+  color: var(--white);
+  font-weight: 400;
+}
+
+/* Grid de imágenes 3x3 */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 3px;
+  background: #1a1a1a;
+}
+
+.cap-cell {
+  position: relative;
+  aspect-ratio: 1;
+  cursor: pointer;
+  overflow: hidden;
+  background: #0d0d0d;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cap-cell img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: filter 0.2s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Estado seleccionado */
+.cap-cell.selected img {
+  filter: brightness(0.65) saturate(0.7);
+}
+.cap-cell.selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid rgba(180,220,0,0.9);
+  pointer-events: none;
+  animation: selectPop 0.18s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes selectPop {
+  from { transform: scale(0.88); opacity: 0.5; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.cap-cell.selected .cap-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.cap-check {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 26px; height: 26px;
+  background: rgba(180,220,0,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  z-index: 2;
+  color: #111;
+  font-weight: 700;
+}
+
+/* Hover */
+@media(hover:hover){
+  .cap-cell:hover img { filter: brightness(0.85); }
+  .cap-cell.selected:hover img { filter: brightness(0.55) saturate(0.7); }
+}
+
+/* Footer del captcha */
+.cap-footer {
+  padding: 14px 16px;
+  background: #0d0d0d;
+  border-top: 1px solid rgba(245,242,235,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cap-counter {
+  font-size: 11px;
+  color: rgba(245,242,235,0.35);
+  letter-spacing: 0.08em;
+}
+.cap-counter span {
+  color: rgba(180,220,0,0.8);
+  font-weight: 400;
+}
+.cap-btn {
+  background: none;
+  border: 1px solid rgba(245,242,235,0.22);
+  color: rgba(245,242,235,0.7);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.cap-btn:hover, .cap-btn:active {
+  border-color: rgba(180,220,0,0.6);
+  color: rgba(180,220,0,0.9);
+  background: rgba(180,220,0,0.05);
+}
+.cap-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: rgba(245,242,235,0.1);
+  color: rgba(245,242,235,0.3);
+}
+
+/* Error shake */
+.cap-box.shake {
+  animation: shake 0.45s cubic-bezier(0.36,0.07,0.19,0.97);
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-8px); }
+  30%     { transform: translateX(8px); }
+  45%     { transform: translateX(-6px); }
+  60%     { transform: translateX(6px); }
+  75%     { transform: translateX(-3px); }
+  90%     { transform: translateX(3px); }
+}
+
+/* Error message */
+.cap-error {
+  font-size: 11px;
+  color: #e05060;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 0.3s;
+  min-width: 140px;
+}
+.cap-error.show { opacity: 1; }
+
+/* Éxito */
+.cap-success {
+  position: absolute;
+  inset: 0;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  border-radius: 8px;
+}
+.cap-success.show { opacity: 1; pointer-events: all; }
+.cap-success-icon {
+  font-size: 48px;
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+}
+@keyframes successPop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.cap-success-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  color: rgba(245,242,235,0.88);
+  text-align: center;
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+.cap-success-sub {
+  font-size: 12px;
+  color: rgba(245,242,235,0.35);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+}
+
+/* No scrollear mientras está el captcha */
+body.cap-active { overflow: hidden; }
 
 </style>
 </head>
@@ -863,7 +1149,132 @@ footer {
   </div>
 </div>
 
+
 <script>
+
+  /* ════════════════════════════════
+   CAPTCHA — Mesie detector de lanas
+════════════════════════════════ */
+(function(){
+
+  /* Definimos las 9 celdas:
+     src   = ruta de la imagen
+     hasHairTie = true si tiene lana (hay que seleccionarla)
+     label = descripción accesible                              */
+  const CELLS = [
+    // ── Con lana (deben seleccionarse) ──
+    { src:'fotos/mesie-pc.jpg',     hasHairTie:true,  label:'Mesie frente a la computadora con colita' },
+    { src:'fotos/mesie-sofa.jpg',   hasHairTie:true,  label:'Mesie en el sofá con lana' },
+    { src:'fotos/mesie-ojos.jpg',   hasHairTie:true,  label:'Mesie con sus ojos grandes y lana' },
+    // ── Sin lana (distractores — fotos de viaje) ──
+    { src:'fotos/mallorca-espana.jpg', hasHairTie:false, label:'Playa en Mallorca' },
+    { src:'fotos/lisboa-portugal.jpg', hasHairTie:false, label:'Lisboa, Portugal' },
+    { src:'fotos/punta-cana.jpg',      hasHairTie:false, label:'Punta Cana' },
+    // ── Con lana ──
+    { src:'fotos/mesie-mojada.jpg', hasHairTie:true,  label:'Mesie mojada con lana' },
+    // ── Sin lana ──
+    { src:'fotos/roma-italia.jpg',  hasHairTie:false, label:'Roma, Italia' },
+    // ── Con lana ──
+    { src:'fotos/mesie-balcon.jpg', hasHairTie:true,  label:'Mesie en el balcón con lana' },
+  ];
+
+  /* Mezclar aleatoriamente las celdas */
+  function shuffle(arr) {
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  const cells     = shuffle(CELLS);
+  const grid      = document.getElementById('cap-grid');
+  const submitBtn = document.getElementById('cap-submit');
+  const countEl   = document.getElementById('cap-count');
+  const errorEl   = document.getElementById('cap-error');
+  const capBox    = document.getElementById('cap-box');
+  const capOver   = document.getElementById('captcha-overlay');
+  const capSucc   = document.getElementById('cap-success');
+
+  // Cuántas con lana hay en el set mezclado
+  const correctCount = cells.filter(c=>c.hasHairTie).length;
+  const selected = new Set();
+
+  /* Renderizar celdas */
+  cells.forEach((cell, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cap-cell';
+    div.setAttribute('aria-label', cell.label);
+    div.setAttribute('role', 'checkbox');
+    div.setAttribute('aria-checked', 'false');
+    div.dataset.idx = idx;
+
+    const img = document.createElement('img');
+    img.src = cell.src;
+    img.alt = cell.label;
+    img.draggable = false;
+
+    const check = document.createElement('div');
+    check.className = 'cap-check';
+    check.textContent = '✓';
+
+    div.appendChild(img);
+    div.appendChild(check);
+    grid.appendChild(div);
+
+    div.addEventListener('click', () => {
+      errorEl.classList.remove('show');
+      if(selected.has(idx)){
+        selected.delete(idx);
+        div.classList.remove('selected');
+        div.setAttribute('aria-checked','false');
+      } else {
+        selected.add(idx);
+        div.classList.add('selected');
+        div.setAttribute('aria-checked','true');
+      }
+      countEl.textContent = selected.size;
+      submitBtn.disabled = selected.size === 0;
+    });
+  });
+
+  /* Verificar */
+  submitBtn.addEventListener('click', () => {
+    // ¿Todas las de lana están seleccionadas y no hay falsas?
+    const selectedCells = [...selected].map(i => cells[i]);
+    const allCorrect  = selectedCells.every(c => c.hasHairTie);
+    const allFound    = cells.every((c,i) => !c.hasHairTie || selected.has(i));
+
+    if(allCorrect && allFound){
+      // ¡Éxito!
+      capSucc.classList.add('show');
+      document.body.classList.remove('cap-active');
+      setTimeout(() => {
+        capOver.style.opacity = '0';
+        capOver.style.transition = 'opacity 0.6s ease';
+        setTimeout(() => {
+          capOver.style.display = 'none';
+        }, 650);
+      }, 1600);
+    } else {
+      // Error — shake y mensaje
+      errorEl.textContent = allCorrect
+        ? '¡Falta marcar alguna lana! 🙀'
+        : '¡Esa no es una lana, es un viaje! 😹';
+      errorEl.classList.add('show');
+      capBox.classList.remove('shake');
+      void capBox.offsetWidth; // reflow para reiniciar animación
+      capBox.classList.add('shake');
+      capBox.addEventListener('animationend', () => capBox.classList.remove('shake'), {once:true});
+    }
+  });
+
+  /* Bloquear scroll mientras está activo */
+  document.body.classList.add('cap-active');
+
+})();
+
 /* Ken Burns */
 window.addEventListener('load', () => document.getElementById('hbg').classList.add('kb'));
 
@@ -955,7 +1366,7 @@ const COLORS = [
 const band = {
   x:0, y:0, vx:0, vy:0,
   angle:0, av:0.055,
-  rx:14, ry:12,       // radios de la elipse (anillo)
+  rx:14, ry:9,       // radios de la elipse (anillo)
   speed:3.2,
   ci:0,              // índice de color
   held:false,
@@ -987,7 +1398,7 @@ const band = {
   draw(alpha){
     const c = COLORS[this.ci];
     const a = alpha??1;
-    const rx=this.rx, ry=this.ry, T=3; // T = grosor del tubo
+    const rx=this.rx, ry=this.ry, T=6; // T = grosor del tubo
     ctx.save();
     ctx.translate(this.x,this.y);
     ctx.rotate(this.angle);
@@ -1218,6 +1629,11 @@ const cat = {
         ctx.restore();
       }
     }
+
+    /* cuello */
+    ctx.beginPath(); ctx.moveTo(W*0.30,-H*0.40); ctx.lineTo(W*0.34,-H*0.54);
+    ctx.strokeStyle='rgba(245,242,235,0.75)'; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
+
     /* cabeza */
     ctx.beginPath(); ctx.ellipse(W*0.38,-H*0.68,W*0.23,W*0.21,0.08,0,Math.PI*2);
     ctx.fillStyle='rgba(245,242,235,0.055)'; ctx.fill();
