@@ -970,145 +970,272 @@ body.cap-active { overflow: hidden; }
 
 
 /* ══════════════════════════════════════
-   JUEGO DE PISTAS — al final del sitio
+   JUEGO DE PISTAS
 ══════════════════════════════════════ */
 .riddle-section {
-  background: #080808;
-  padding: clamp(60px, 12vw, 100px) clamp(20px, 8vw, 80px);
+  background: #050505;
+  padding: clamp(80px, 14vw, 130px) clamp(20px, 8vw, 80px);
   border-top: 1px solid rgba(245,242,235,0.06);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fondo pulsante sutil */
+.riddle-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(180,220,0,0.03) 0%, transparent 70%);
+  animation: riddleBreath 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes riddleBreath {
+  0%,100% { opacity: 0.4; transform: scale(1); }
+  50%     { opacity: 1;   transform: scale(1.08); }
+}
+
+.riddle-lock-icon {
+  font-size: 36px;
+  margin-bottom: 24px;
+  opacity: 0.4;
+  animation: lockPulse 2.5s ease-in-out infinite;
+}
+@keyframes lockPulse {
+  0%,100% { opacity:0.4; transform: scale(1); }
+  50%     { opacity:0.7; transform: scale(1.1); }
 }
 
 .riddle-eyebrow {
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 400;
-  letter-spacing: 0.38em;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
-  color: rgba(245,242,235,0.28);
-  margin-bottom: 28px;
+  color: rgba(180,220,0,0.55);
+  margin-bottom: 20px;
+  border: 1px solid rgba(180,220,0,0.18);
+  padding: 8px 20px;
+  border-radius: 2px;
 }
 
 .riddle-question {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(22px, 5vw, 36px);
-  color: rgba(245,242,235,0.88);
-  line-height: 1.35;
-  margin-bottom: 40px;
-  max-width: 520px;
+  font-size: clamp(26px, 6vw, 44px);
+  color: rgba(245,242,235,0.95);
+  line-height: 1.3;
+  margin-bottom: 16px;
+  max-width: 540px;
+}
+
+.riddle-subtext {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(245,242,235,0.22);
+  margin-bottom: 48px;
+  text-transform: uppercase;
 }
 
 .riddle-options {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   width: 100%;
-  max-width: 360px;
-  margin-bottom: 32px;
+  max-width: 400px;
+  margin-bottom: 28px;
 }
 
 .riddle-btn {
   background: none;
-  border: 1px solid rgba(245,242,235,0.14);
-  color: rgba(245,242,235,0.65);
+  border: 1px solid rgba(245,242,235,0.12);
+  color: rgba(245,242,235,0.55);
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 300;
-  letter-spacing: 0.12em;
-  padding: 16px 24px;
+  letter-spacing: 0.18em;
+  padding: 20px 28px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.28s ease;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
   border-radius: 2px;
+  position: relative;
+  overflow: hidden;
 }
+/* shimmer hover */
+.riddle-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(245,242,235,0.06) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.riddle-btn:hover::after { transform: translateX(100%); }
 .riddle-btn:hover, .riddle-btn:active {
-  border-color: rgba(245,242,235,0.4);
+  border-color: rgba(245,242,235,0.38);
   color: rgba(245,242,235,0.92);
   background: rgba(245,242,235,0.04);
+  transform: translateY(-1px);
 }
+.riddle-btn:disabled { pointer-events: none; }
+
+/* Estado incorrecto */
 .riddle-btn.wrong {
-  border-color: rgba(200,60,60,0.5);
-  color: rgba(200,60,60,0.7);
-  animation: wrongShake 0.4s cubic-bezier(0.36,0.07,0.19,0.97);
-}
-.riddle-btn.correct {
-  border-color: rgba(180,220,0,0.7);
-  color: rgba(180,220,0,0.9);
-  background: rgba(180,220,0,0.06);
+  border-color: rgba(220,50,50,0.6) !important;
+  color: rgba(220,50,50,0.75) !important;
+  background: rgba(220,50,50,0.05) !important;
+  animation: wrongShake 0.45s cubic-bezier(0.36,0.07,0.19,0.97);
 }
 @keyframes wrongShake {
   0%,100% { transform: translateX(0); }
-  20%     { transform: translateX(-7px); }
-  40%     { transform: translateX(7px); }
-  60%     { transform: translateX(-4px); }
-  80%     { transform: translateX(4px); }
+  15%     { transform: translateX(-9px); }
+  35%     { transform: translateX(9px); }
+  55%     { transform: translateX(-5px); }
+  75%     { transform: translateX(5px); }
 }
 
+/* Estado correcto */
+.riddle-btn.correct {
+  border-color: rgba(180,220,0,0.8) !important;
+  color: rgba(180,220,0,1) !important;
+  background: rgba(180,220,0,0.08) !important;
+  box-shadow: 0 0 24px rgba(180,220,0,0.15), inset 0 0 20px rgba(180,220,0,0.06);
+}
+
+/* Feedback */
 .riddle-feedback {
   font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.15em;
-  min-height: 18px;
-  transition: opacity 0.3s;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  min-height: 20px;
   opacity: 0;
+  transition: opacity 0.3s;
 }
 .riddle-feedback.show { opacity: 1; }
-.riddle-feedback.err  { color: rgba(200,60,60,0.7); }
-.riddle-feedback.ok   { color: rgba(180,220,0,0.8); }
+.riddle-feedback.err  { color: rgba(220,50,50,0.7); }
+.riddle-feedback.ok   { color: rgba(180,220,0,0.85); }
 
-/* Compuerta — la pista oculta */
-.riddle-gate {
-  width: 100%;
-  max-width: 480px;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.9s cubic-bezier(0.16,1,0.3,1),
-              opacity 0.7s ease 0.2s;
+/* ── FLASH DE ÉXITO ── */
+#riddle-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(180,220,0,0.12);
+  pointer-events: none;
   opacity: 0;
 }
+#riddle-flash.boom {
+  animation: flashBoom 0.7s ease-out forwards;
+}
+@keyframes flashBoom {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── PARTÍCULAS / CONFETTI ── */
+#riddle-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+.rp {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0;
+  animation: particleFly 1.2s cubic-bezier(0.2,0.8,0.4,1) forwards;
+}
+@keyframes particleFly {
+  0%   { opacity:1; transform: translateY(0) scale(1) rotate(0deg); }
+  100% { opacity:0; transform: translateY(-180px) scale(0.4) rotate(360deg); }
+}
+
+/* ── COMPUERTA ── */
+.riddle-gate {
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 1.1s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.8s ease 0.35s;
+  position: relative;
+  z-index: 1;
+}
 .riddle-gate.open {
-  max-height: 400px;
+  max-height: 500px;
   opacity: 1;
 }
+
 .riddle-gate-inner {
-  margin-top: 48px;
-  border-top: 1px solid rgba(245,242,235,0.08);
-  padding-top: 40px;
+  margin-top: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 0;
 }
-.riddle-paw {
-  font-size: 28px;
-  animation: pawPulse 2s ease-in-out infinite;
+
+/* Línea decorativa de apertura */
+.riddle-gate-line {
+  width: 1px;
+  height: 0;
+  background: linear-gradient(to bottom, rgba(180,220,0,0.6), transparent);
+  margin-bottom: 32px;
+  transition: height 1s ease 0.5s;
 }
-@keyframes pawPulse {
-  0%,100% { transform: scale(1); opacity: 0.7; }
-  50%     { transform: scale(1.15); opacity: 1; }
-}
-.riddle-clue-label {
+.riddle-gate.open .riddle-gate-line { height: 60px; }
+
+.riddle-gate-badge {
+  background: rgba(180,220,0,0.08);
+  border: 1px solid rgba(180,220,0,0.3);
+  border-radius: 2px;
+  padding: 6px 18px;
   font-family: var(--sans);
   font-size: 9px;
-  letter-spacing: 0.45em;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
-  color: rgba(245,242,235,0.25);
+  color: rgba(180,220,0,0.7);
+  margin-bottom: 32px;
 }
+
 .riddle-clue-text {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 4.5vw, 28px);
-  color: rgba(245,242,235,0.85);
-  line-height: 1.45;
+  font-size: clamp(24px, 5.5vw, 40px);
+  color: rgba(245,242,235,0.92);
+  line-height: 1.4;
   text-align: center;
-  max-width: 400px;
+  max-width: 440px;
+  /* texto que aparece letra a letra */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease 1s, transform 0.8s ease 1s;
 }
+.riddle-gate.open .riddle-clue-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.riddle-clue-sub {
+  margin-top: 20px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245,242,235,0.18);
+  opacity: 0;
+  transition: opacity 0.6s ease 1.6s;
+}
+.riddle-gate.open .riddle-clue-sub { opacity: 1; }
 
 </style>
 </head>
@@ -1312,13 +1439,18 @@ body.cap-active { overflow: hidden; }
 <!-- ██ FOOTER ██ -->
 
 <!-- ██████ JUEGO DE PISTAS ██████ -->
-<section class="riddle-section r">
+<div id="riddle-flash"></div>
 
-  <div class="riddle-eyebrow">La siguiente respuesta habilita la siguiente pista</div>
+<section class="riddle-section r">
+  <div id="riddle-particles"></div>
+
+  <div class="riddle-lock-icon">🔒</div>
+  <div class="riddle-eyebrow">La respuesta correcta habilita la siguiente pista</div>
 
   <div class="riddle-question">
     ¿Qué día cumple años Mesie Lane?
   </div>
+  <div class="riddle-subtext">Una sola respuesta abre la compuerta</div>
 
   <div class="riddle-options">
     <button class="riddle-btn" data-answer="wrong" onclick="riddleAnswer(this)">
@@ -1334,14 +1466,15 @@ body.cap-active { overflow: hidden; }
 
   <div class="riddle-feedback" id="riddle-feedback"></div>
 
-  <!-- Compuerta: se abre con la respuesta correcta -->
+  <!-- Compuerta -->
   <div class="riddle-gate" id="riddle-gate">
     <div class="riddle-gate-inner">
-      <div class="riddle-paw">🐾</div>
-      <div class="riddle-clue-label">Siguiente pista</div>
+      <div class="riddle-gate-line"></div>
+      <div class="riddle-gate-badge">🐾 &nbsp; Pista desbloqueada &nbsp; 🐾</div>
       <div class="riddle-clue-text">
         ¿Dónde hace Lana sus necesidades?
       </div>
+      <div class="riddle-clue-sub">Encontrá la respuesta para continuar</div>
     </div>
   </div>
 
@@ -1558,34 +1691,94 @@ body.cap-active { overflow: hidden; }
 
 /* ── Juego de pistas ── */
 function riddleAnswer(btn) {
-  const allBtns = document.querySelectorAll('.riddle-btn');
+  const allBtns  = document.querySelectorAll('.riddle-btn');
   const feedback = document.getElementById('riddle-feedback');
   const gate     = document.getElementById('riddle-gate');
+  const flash    = document.getElementById('riddle-flash');
+  const particles= document.getElementById('riddle-particles');
+  const lockIcon = document.querySelector('.riddle-lock-icon');
 
-  // Si ya está abierta, ignorar
   if(gate.classList.contains('open')) return;
 
-  // Limpiar estados previos
   allBtns.forEach(b => b.classList.remove('wrong','correct'));
   feedback.classList.remove('show','err','ok');
 
   if(btn.dataset.answer === 'correct') {
+
+    // 1. Botón correcto se ilumina
     btn.classList.add('correct');
-    feedback.textContent = '¡Correcto! 🐾';
+
+    // 2. Feedback positivo
+    feedback.textContent = '¡Correcto! 🔓';
     feedback.classList.add('show','ok');
-    // Deshabilitar todos los botones
-    allBtns.forEach(b => { b.disabled = true; b.style.opacity = b === btn ? '1' : '0.25'; });
-    // Abrir compuerta con pequeño delay
-    setTimeout(() => { gate.classList.add('open'); }, 400);
+
+    // 3. Flash de pantalla
+    setTimeout(() => {
+      flash.classList.add('boom');
+      flash.addEventListener('animationend', () => flash.classList.remove('boom'), {once:true});
+    }, 180);
+
+    // 4. Partículas / confetti de patas y estrellas
+    setTimeout(() => {
+      const emojis = ['🐾','✨','🐾','⭐','🐾','💫','🐾','✦'];
+      const rect = btn.getBoundingClientRect();
+      const secRect = document.querySelector('.riddle-section').getBoundingClientRect();
+      for(let i = 0; i < 18; i++) {
+        const p = document.createElement('div');
+        p.className = 'rp';
+        p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        p.style.left = (20 + Math.random() * 60) + '%';
+        p.style.top  = (rect.top - secRect.top - 20) + 'px';
+        p.style.animationDelay = (Math.random() * 0.4) + 's';
+        p.style.fontSize = (14 + Math.random() * 14) + 'px';
+        particles.appendChild(p);
+        p.addEventListener('animationend', () => p.remove(), {once:true});
+      }
+    }, 200);
+
+    // 5. Icono candado se abre
+    setTimeout(() => {
+      if(lockIcon) {
+        lockIcon.textContent = '🔓';
+        lockIcon.style.opacity = '1';
+        lockIcon.style.animation = 'none';
+        lockIcon.style.transform = 'scale(1.3)';
+        setTimeout(() => { lockIcon.style.transform = 'scale(1)'; }, 300);
+      }
+    }, 350);
+
+    // 6. Deshabilitar botones
+    allBtns.forEach(b => {
+      b.disabled = true;
+      if(b !== btn) {
+        b.style.opacity = '0.18';
+        b.style.borderColor = 'rgba(245,242,235,0.05)';
+      }
+    });
+
+    // 7. Abrir compuerta
+    setTimeout(() => {
+      gate.classList.add('open');
+      // Scroll suave hacia la pista
+      setTimeout(() => {
+        gate.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 600);
+    }, 500);
+
   } else {
+    // Incorrecto
     btn.classList.add('wrong');
-    feedback.textContent = '¡Esa no! Intentá de nuevo 😹';
+    const msgs = [
+      '¡Esa no! Seguí intentando 😹',
+      '¡Casi! (mentira) 😹',
+      '¡Mesie no aprueba esa respuesta! 🙀',
+    ];
+    feedback.textContent = msgs[Math.floor(Math.random()*msgs.length)];
     feedback.classList.add('show','err');
-    // Sacar el estado wrong después de un momento
     setTimeout(() => {
       btn.classList.remove('wrong');
-      feedback.classList.remove('show');
-    }, 1800);
+      feedback.classList.remove('show','err');
+    }, 2000);
   }
 }
 
