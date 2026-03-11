@@ -968,6 +968,148 @@ body.cap-active { overflow: hidden; }
   100% { opacity:0; transform: translateX(-50%) scale(0.15) rotate(25deg); }
 }
 
+
+/* ══════════════════════════════════════
+   JUEGO DE PISTAS — al final del sitio
+══════════════════════════════════════ */
+.riddle-section {
+  background: #080808;
+  padding: clamp(60px, 12vw, 100px) clamp(20px, 8vw, 80px);
+  border-top: 1px solid rgba(245,242,235,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.riddle-eyebrow {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(245,242,235,0.28);
+  margin-bottom: 28px;
+}
+
+.riddle-question {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 5vw, 36px);
+  color: rgba(245,242,235,0.88);
+  line-height: 1.35;
+  margin-bottom: 40px;
+  max-width: 520px;
+}
+
+.riddle-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 32px;
+}
+
+.riddle-btn {
+  background: none;
+  border: 1px solid rgba(245,242,235,0.14);
+  color: rgba(245,242,235,0.65);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 2px;
+}
+.riddle-btn:hover, .riddle-btn:active {
+  border-color: rgba(245,242,235,0.4);
+  color: rgba(245,242,235,0.92);
+  background: rgba(245,242,235,0.04);
+}
+.riddle-btn.wrong {
+  border-color: rgba(200,60,60,0.5);
+  color: rgba(200,60,60,0.7);
+  animation: wrongShake 0.4s cubic-bezier(0.36,0.07,0.19,0.97);
+}
+.riddle-btn.correct {
+  border-color: rgba(180,220,0,0.7);
+  color: rgba(180,220,0,0.9);
+  background: rgba(180,220,0,0.06);
+}
+@keyframes wrongShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-7px); }
+  40%     { transform: translateX(7px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX(4px); }
+}
+
+.riddle-feedback {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  min-height: 18px;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.riddle-feedback.show { opacity: 1; }
+.riddle-feedback.err  { color: rgba(200,60,60,0.7); }
+.riddle-feedback.ok   { color: rgba(180,220,0,0.8); }
+
+/* Compuerta — la pista oculta */
+.riddle-gate {
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.9s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.7s ease 0.2s;
+  opacity: 0;
+}
+.riddle-gate.open {
+  max-height: 400px;
+  opacity: 1;
+}
+.riddle-gate-inner {
+  margin-top: 48px;
+  border-top: 1px solid rgba(245,242,235,0.08);
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.riddle-paw {
+  font-size: 28px;
+  animation: pawPulse 2s ease-in-out infinite;
+}
+@keyframes pawPulse {
+  0%,100% { transform: scale(1); opacity: 0.7; }
+  50%     { transform: scale(1.15); opacity: 1; }
+}
+.riddle-clue-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(245,242,235,0.25);
+}
+.riddle-clue-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 4.5vw, 28px);
+  color: rgba(245,242,235,0.85);
+  line-height: 1.45;
+  text-align: center;
+  max-width: 400px;
+}
+
 </style>
 </head>
 <body>
@@ -1168,6 +1310,43 @@ body.cap-active { overflow: hidden; }
 </section>
 
 <!-- ██ FOOTER ██ -->
+
+<!-- ██████ JUEGO DE PISTAS ██████ -->
+<section class="riddle-section r">
+
+  <div class="riddle-eyebrow">La siguiente respuesta habilita la siguiente pista</div>
+
+  <div class="riddle-question">
+    ¿Qué día cumple años Mesie Lane?
+  </div>
+
+  <div class="riddle-options">
+    <button class="riddle-btn" data-answer="wrong" onclick="riddleAnswer(this)">
+      1 de Enero
+    </button>
+    <button class="riddle-btn" data-answer="correct" onclick="riddleAnswer(this)">
+      21 de Mayo
+    </button>
+    <button class="riddle-btn" data-answer="wrong" onclick="riddleAnswer(this)">
+      31 de Febrero
+    </button>
+  </div>
+
+  <div class="riddle-feedback" id="riddle-feedback"></div>
+
+  <!-- Compuerta: se abre con la respuesta correcta -->
+  <div class="riddle-gate" id="riddle-gate">
+    <div class="riddle-gate-inner">
+      <div class="riddle-paw">🐾</div>
+      <div class="riddle-clue-label">Siguiente pista</div>
+      <div class="riddle-clue-text">
+        ¿Dónde hace Lana sus necesidades?
+      </div>
+    </div>
+  </div>
+
+</section>
+
 <footer>
   <p class="foot-date">20 · 03 · 2016 — 20 · 03 · 2026</p>
   <span class="foot-paw" id="pawbtn">🐾</span>
@@ -1374,6 +1553,41 @@ body.cap-active { overflow: hidden; }
     window.addEventListener('devicemotion',onMotion,{passive:true});
   }
 })();
+
+
+
+/* ── Juego de pistas ── */
+function riddleAnswer(btn) {
+  const allBtns = document.querySelectorAll('.riddle-btn');
+  const feedback = document.getElementById('riddle-feedback');
+  const gate     = document.getElementById('riddle-gate');
+
+  // Si ya está abierta, ignorar
+  if(gate.classList.contains('open')) return;
+
+  // Limpiar estados previos
+  allBtns.forEach(b => b.classList.remove('wrong','correct'));
+  feedback.classList.remove('show','err','ok');
+
+  if(btn.dataset.answer === 'correct') {
+    btn.classList.add('correct');
+    feedback.textContent = '¡Correcto! 🐾';
+    feedback.classList.add('show','ok');
+    // Deshabilitar todos los botones
+    allBtns.forEach(b => { b.disabled = true; b.style.opacity = b === btn ? '1' : '0.25'; });
+    // Abrir compuerta con pequeño delay
+    setTimeout(() => { gate.classList.add('open'); }, 400);
+  } else {
+    btn.classList.add('wrong');
+    feedback.textContent = '¡Esa no! Intentá de nuevo 😹';
+    feedback.classList.add('show','err');
+    // Sacar el estado wrong después de un momento
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 1800);
+  }
+}
 
 
 /* Ken Burns */
