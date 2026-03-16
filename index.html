@@ -1,5 +1,5 @@
 
-<!-- ██████ CAPTCHA1 ██████ -->
+<!-- ██████ CAPTCHA ██████ -->
 <div id="captcha-overlay" role="dialog" aria-modal="true" aria-label="Verificación">
   <div class="cap-box" id="cap-box">
 
@@ -2300,13 +2300,19 @@ loop();
 
   const capOver = document.getElementById('captcha-overlay');
   if(capOver) {
-    const obs = new MutationObserver(() => {
-      if(capOver.style.display === 'none') {
-        obs.disconnect();
-        setTimeout(startMusic, 900);
-      }
-    });
-    obs.observe(capOver, { attributes: true, attributeFilter: ['style'] });
+    // Si ya está oculto al cargar (cache del browser), arrancar directo
+    if(capOver.style.display === 'none') {
+      setTimeout(startMusic, 900);
+    } else {
+      // Observar cuando el captcha se cierra
+      const obs = new MutationObserver(() => {
+        if(capOver.style.display === 'none') {
+          obs.disconnect();
+          setTimeout(startMusic, 900);
+        }
+      });
+      obs.observe(capOver, { attributes: true, attributeFilter: ['style'] });
+    }
   }
 
   btn.addEventListener('click', () => {
