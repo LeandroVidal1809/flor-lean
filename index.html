@@ -1259,20 +1259,15 @@ body.cap-active { overflow: hidden; }
   -webkit-tap-highlight-color: transparent;
   opacity: 0;
   pointer-events: none;
+  transform: scale(0.5);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s;
 }
 #music-btn.visible {
   opacity: 1;
   pointer-events: all;
-  animation: musicBtnIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  transform: scale(1);
 }
-@keyframes musicBtnIn {
-  from { opacity:0; transform: scale(0.5); }
-  to   { opacity:1; transform: scale(1); }
-}
-#music-btn:hover {
-  border-color: rgba(245,242,235,0.45);
-  background: rgba(20,20,20,0.9);
-}
+#music-btn:hover { border-color: rgba(245,242,235,0.45); background: rgba(20,20,20,0.9); }
 #music-btn svg { width:20px; height:20px; overflow:visible; }
 .music-bar {
   transform-origin: bottom;
@@ -1324,7 +1319,7 @@ body.cap-active { overflow: hidden; }
       <span>años</span>
     </h1>
     <p class="h-names">Flor & Lean</p>
-    <a href="#oa" class="h-btn">vamo' a darle</a>
+    <a href="#oa" class="h-btn" id="hero-btn">vamo' a darle</a>
   </div>
   <div class="h-line"><div class="h-line-bar"></div></div>
 
@@ -2276,13 +2271,15 @@ loop();
 })();
 
 
-/* ── Música · Amor a medio tiempo · Yoskar Sarante ── */
+/* ── Música · arranca con el botón "vamo' a darle" ── */
 (function(){
-  const audio = document.getElementById('bg-music');
-  const btn   = document.getElementById('music-btn');
+  const audio   = document.getElementById('bg-music');
+  const btn     = document.getElementById('music-btn');
+  const heroBtn = document.getElementById('hero-btn');
   if(!audio || !btn) return;
 
   audio.volume = 0;
+  let started = false;
 
   function fadeIn(ms) {
     const target = 0.75, steps = 50, inc = target / steps;
@@ -2295,53 +2292,25 @@ loop();
   }
 
   function startMusic() {
+    if(started) return;
+    started = true;
     audio.play()
-      .then(() => {
-        fadeIn(3000);
-        btn.classList.add('visible');
-      })
-      .catch(() => {
-        // autoplay bloqueado — mostrar botón igual para activar manual
-        btn.classList.add('visible', 'paused');
-      });
+      .then(() => { fadeIn(3000); btn.classList.add('visible'); })
+      .catch(() => { btn.classList.add('visible','paused'); });
   }
 
-  function setupTrigger() {
-    const capOver = document.getElementById('captcha-overlay');
-    if(!capOver) { startMusic(); return; }
-
-    // Chequear estado actual
-    const isHidden = capOver.style.display === 'none' ||
-                     capOver.style.opacity === '0' ||
-                     !document.body.contains(capOver) ||
-                     getComputedStyle(capOver).display === 'none';
-
-    if(isHidden) {
-      // Ya está cerrado — arrancar directo
-      setTimeout(startMusic, 600);
-    } else {
-      // Observar cierre por style Y por class
-      const obs = new MutationObserver(() => {
-        const hidden = capOver.style.display === 'none' ||
-                       capOver.style.opacity === '0' ||
-                       getComputedStyle(capOver).display === 'none';
-        if(hidden) { obs.disconnect(); setTimeout(startMusic, 900); }
-      });
-      obs.observe(capOver, {
-        attributes: true,
-        attributeFilter: ['style', 'class']
-      });
-    }
+  // Trigger 1: botón hero "vamo' a darle"
+  if(heroBtn) {
+    heroBtn.addEventListener('click', () => { setTimeout(startMusic, 400); }, { once: true });
   }
 
-  // Esperar que el DOM esté listo
-  if(document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupTrigger);
-  } else {
-    setupTrigger();
+  // Trigger 2: cualquier click en el captcha (backup)
+  const capOver = document.getElementById('captcha-overlay');
+  if(capOver) {
+    capOver.addEventListener('click', () => { setTimeout(startMusic, 1200); }, { once: true });
   }
 
-  // Control play/pause
+  // Control play/pause del botón flotante
   btn.addEventListener('click', () => {
     if(audio.paused) {
       audio.play();
@@ -2364,14 +2333,10 @@ loop();
      alt="Mesie cowboy" aria-hidden="true">
 
 
-<!-- ♫ Amor a medio tiempo · Yoskar Sarante -->
 <audio id="bg-music" loop preload="auto">
   <source src="cancion.mp3" type="audio/mpeg">
 </audio>
-
-<button id="music-btn"
-        data-tip="Amor a medio tiempo · Yoskar Sarante"
-        aria-label="Pausar música">
+<button id="music-btn" data-tip="Amor a medio tiempo · Yoskar Sarante" aria-label="Pausar música">
   <svg viewBox="0 0 22 16" fill="none">
     <rect class="music-bar" x="0"    y="2" width="3" height="12" rx="1.5" fill="rgba(245,242,235,0.85)"/>
     <rect class="music-bar" x="4.7"  y="0" width="3" height="16" rx="1.5" fill="rgba(245,242,235,0.85)"/>
