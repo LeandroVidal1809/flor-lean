@@ -1252,15 +1252,17 @@ body.cap-active { overflow: hidden; }
   background: rgba(8,8,8,0.75);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: border-color 0.3s, background 0.3s;
   -webkit-tap-highlight-color: transparent;
   opacity: 0;
+  pointer-events: none;
 }
 #music-btn.visible {
-  display: flex;
+  opacity: 1;
+  pointer-events: all;
   animation: musicBtnIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes musicBtnIn {
@@ -2274,7 +2276,7 @@ loop();
 })();
 
 
-/* ── Música post-captcha · Amor a medio tiempo ── */
+/* ── Música · Amor a medio tiempo · Yoskar Sarante ── */
 (function(){
   const audio = document.getElementById('bg-music');
   const btn   = document.getElementById('music-btn');
@@ -2294,27 +2296,52 @@ loop();
 
   function startMusic() {
     audio.play()
-      .then(() => { fadeIn(3000); btn.classList.add('visible'); })
-      .catch(() => { btn.classList.add('visible','paused'); });
+      .then(() => {
+        fadeIn(3000);
+        btn.classList.add('visible');
+      })
+      .catch(() => {
+        // autoplay bloqueado — mostrar botón igual para activar manual
+        btn.classList.add('visible', 'paused');
+      });
   }
 
-  const capOver = document.getElementById('captcha-overlay');
-  if(capOver) {
-    // Si ya está oculto al cargar (cache del browser), arrancar directo
-    if(capOver.style.display === 'none') {
-      setTimeout(startMusic, 900);
+  function setupTrigger() {
+    const capOver = document.getElementById('captcha-overlay');
+    if(!capOver) { startMusic(); return; }
+
+    // Chequear estado actual
+    const isHidden = capOver.style.display === 'none' ||
+                     capOver.style.opacity === '0' ||
+                     !document.body.contains(capOver) ||
+                     getComputedStyle(capOver).display === 'none';
+
+    if(isHidden) {
+      // Ya está cerrado — arrancar directo
+      setTimeout(startMusic, 600);
     } else {
-      // Observar cuando el captcha se cierra
+      // Observar cierre por style Y por class
       const obs = new MutationObserver(() => {
-        if(capOver.style.display === 'none') {
-          obs.disconnect();
-          setTimeout(startMusic, 900);
-        }
+        const hidden = capOver.style.display === 'none' ||
+                       capOver.style.opacity === '0' ||
+                       getComputedStyle(capOver).display === 'none';
+        if(hidden) { obs.disconnect(); setTimeout(startMusic, 900); }
       });
-      obs.observe(capOver, { attributes: true, attributeFilter: ['style'] });
+      obs.observe(capOver, {
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
     }
   }
 
+  // Esperar que el DOM esté listo
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupTrigger);
+  } else {
+    setupTrigger();
+  }
+
+  // Control play/pause
   btn.addEventListener('click', () => {
     if(audio.paused) {
       audio.play();
